@@ -1,0 +1,28 @@
+Redis {#config_health_checkers_redis}
+=====
+
+The Redis health checker is a custom health checker (with
+`envoy.health_checkers.redis` as name) which checks Redis upstream
+hosts. It sends a Redis PING command and expect a PONG response. The
+upstream Redis server can respond with anything other than PONG to cause
+an immediate active health check failure. Optionally, Envoy can perform
+EXISTS on a user-specified key. If the key does not exist it is
+considered a passing health check. This allows the user to mark a Redis
+instance for maintenance by setting the specified
+`key <envoy_v3_api_field_config.health_checker.redis.v2.Redis.key>`{.interpreted-text
+role="ref"} to any value and waiting for traffic to drain.
+
+An example setting for
+`custom_health_check <envoy_v3_api_msg_config.core.v3.HealthCheck.CustomHealthCheck>`{.interpreted-text
+role="ref"} as a Redis health checker is shown below:
+
+``` {.yaml}
+custom_health_check:
+  name: envoy.health_checkers.redis
+    typed_config:
+      "@type": type.googleapis.com/envoy.extensions.filters.network.redis_proxy.v3.RedisProxy
+      key: foo
+```
+
+-   `v3 API reference <envoy_v3_api_msg_config.core.v3.HealthCheck.CustomHealthCheck>`{.interpreted-text
+    role="ref"}
